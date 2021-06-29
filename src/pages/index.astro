@@ -1,0 +1,43 @@
+---
+import MainHead from '../components/MainHead.astro';
+import Nav from '../components/Nav.astro';
+import NoteCard from '../components/NoteCard.astro';
+import Pagination from '../components/Pagination.astro';
+
+// page
+let title = 'Don’s Blog';
+let description = 'An example blog on Astro';
+
+// collection
+// note: we want to show first 3 Notes here, but we don’t want to paginate at /1, /2, /3, etc.
+// so we show a preview of Notes here, but actually paginate from $Notes.astro
+import authorData from '../data/authors.json';
+
+let allNotes = Astro.fetchContent('./note/*.md');
+allNotes.sort((a, b) => new Date(b.date) - new Date(a.date));
+let firstPage = allNotes.slice(0, 2);
+---
+
+<html>
+  <head>
+    <title>{title}</title>
+    <MainHead
+      title={title}
+      description={description}
+      image={firstPage[0].image}
+      canonicalURL={Astro.request.canonicalURL.href}
+    />
+  </head>
+
+  <body>
+    <Nav />
+
+    <main>
+      {firstPage.map((note) => <NoteCard note={note} author={authorData[note.author]} />)}
+    </main>
+
+    <footer>
+      <Pagination nextUrl="/notes/2" />
+    </footer>
+  </body>
+</html>
