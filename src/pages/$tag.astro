@@ -1,0 +1,89 @@
+---
+import MainHead from '../components/MainHead.astro';
+import Nav from '../components/Nav.astro';
+import NoteCard from '../components/NoteCard.astro';
+import Pagination from '../components/Pagination.astro';
+
+// page
+let title = 'Don’s Blog';
+let description = 'An example blog on Astro';
+let canonicalURL = Astro.request.canonicalURL;
+
+// collection
+import authorData from '../data/authors.json';
+let { collection } = Astro.props;
+export async function createCollection() {
+  /** Load Notes */
+  let allNotes = Astro.fetchContent('./note/*.md');
+  let allTags = new Set();
+
+  /** Loop through all Notes, gather all tags */
+  let routes = [];
+  for (const note of allNotes) {
+    if (!allTags.has(note.tag)) {
+      allTags.add(note.tag);
+      routes.push({ tag: note.tag });
+    }
+  }
+
+  return {
+    /** Sort Notes newest -> oldest, filter by params.tag */
+    async data({ params }) {
+      allNotes.sort((a, b) => new Date(b.date) - new Date(a.date));
+      return allNotes.filter((note) => note.tag === params.tag);
+    },
+    /** Set page size */
+    pageSize: 3,
+    /** Set permalink URL */
+    permalink: ({ params }) => `/tag/${params.tag}`,
+    /** Pass back all routes so Astro can generate the static build */
+    routes,
+  };
+}
+---
+
+<html>
+  <head>
+    <title>{title}</title>
+    <MainHead
+      title={title}
+      description={description}
+      image={collection.data[0].image}
+      canonicalURL={canonicalURL}
+      prev={collection.url.prev}
+      next={collection.url.next}
+    />
+
+    <style lang="scss">
+      .title {
+        font-size: 3em;
+        letter-spacing: -0.04em;
+        margin-top: 2rem;
+        margin-bottom: 0;
+        text-align: center;
+      }
+
+      .count {
+        font-size: 1em;
+        display: block;
+        text-align: center;
+      }
+    </style>
+  </head>
+
+  <body>
+    <Nav title={title} />
+
+    <main class="wrapper">
+        <h2 class="title">
+            {note.name}
+        </h2>
+      <small class="count">{collection.start + 1}–{collection.end + 1} of {collection.total}</small>
+      {collection.data.map((note) => <NoteCard note={note} author={authorData[note.author]} />)}
+    </main>
+
+    <footer>
+      <Pagination prevUrl={collection.url.prev} nextUrl={collection.url.next} />
+    </footer>
+  </body>
+</html>
