@@ -10,7 +10,7 @@ const { content } = Astro.props;
   <head>
     <title>{content.title}</title>
     <MainHead title={content.title} description={content.description} image={content.image} canonicalURL={Astro.request.canonicalURL} />
-    <style lang="scss">
+    <style>
       .title {
         margin-top: 4rem;
         margin-bottom: 4rem;
@@ -45,7 +45,7 @@ const { content } = Astro.props;
         }
       }
 
-      .Notes {
+      .notes {
         text-transform: uppercase;
       }
 
@@ -68,7 +68,7 @@ const { content } = Astro.props;
         <slot />
       </article>
       <footer class="footer">
-        <a class="Notes" href="/Notes">All Notes</a>
+        <a class="notes" href="/notes">All Notes</a>
       </footer>
     </main>
 

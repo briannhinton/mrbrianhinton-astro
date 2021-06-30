@@ -6,59 +6,61 @@ const { title } = Astro.props;
 ---
 
 <style>
-.header {
-  text-align: center;
-
-  @media (min-width: 600px) {
-    display: flex;
-    align-items: center;
-    padding: 2rem;
-  }
-}
-
-.title {
-  margin: 0;
-  font-size: 1.2em;
-  letter-spacing: -0.03em;
-  font-weight: 400;
-  margin-right: 1em;
-}
-
-.nav {
-  text-align: center;
-
-  @media (min-width: 600px) {
+  .header {
     display: flex;
   }
-}
 
-ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
+  /* Brand */
+  .header__mark {
+    background-color: var(--color-primary);
+    height: 1.6rem;
+    width: 1.6rem;
+    border-radius: 100%;
+  }
+  .header__nav {
+    
+  }
+  .nav {
+    display: flex;
+  }
+  .nav li {
+    list-style: none;
+    margin-right: var(--space-double);
+  }
+  .header__nav, .header__nav a:visited {
+    color: var(--color-secondary);
+  }
 
-li {
-  margin: 0;
-}
+  .header__nav a.active {
+    text-decoration: none;
+    padding-bottom: var(--space-eighth);
+    color: var(--color-primary);
+    font-weight: var(--weight-bold);
+    position: relative;
+  }
 
-a {
-  display: block;
-  color: var(--color-slate-blue-050);
-  font-size: 1.2em;
-  letter-spacing: -0.02em;
-  margin-left: 0.75em;
-  margin-right: 0.75em;
-}
+  .header__nav a.active:after {
+    content: '';
+    display: block;
+    width: 100%;
+    height: 2px;
+    border-radius: 6px;
+    background: var(--color-primary);
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+  }
 </style>
 
-<nav class="header">
-  <h1 class="title">Don’s Blog</h1>
-  <ul class="nav">
-    <li><a href="/">Home</a></li>
-    <li><a href="/notes">All Notes</a></li>
-    <li><a href="/author/don">Author: Don</a></li>
-    <li><a href="/author/sancho">Author: Sancho</a></li>
-    <li><a href="/about">About</a></li>
-  </ul>
-</nav>
+<div class="header">
+  <h1 class="header__mark">
+    <span class="screen-reader-only">The Digital Home of Brian Hinton</span>
+  </h1>
+  <nav class="header__nav">
+    <ul class="nav" aria-label="primary navigation">
+      <li><a href="/" class="active">Home</a></li>
+      <li><a href="/notes">All Notes</a></li>
+      <li><a href="/about">About</a></li>
+    </ul>
+  </nav>
+</div>
